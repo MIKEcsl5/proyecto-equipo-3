@@ -1,0 +1,114 @@
+# ========================================
+# SOLUCIÓN 1: Usar namespace 'default' que ya existe
+# ========================================
+---
+# Primero crear NetworkPolicy en namespace default
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-ingress
+  namespace: default
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-same-namespace
+  namespace: default
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector: {}
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-dns
+  namespace: default
+spec:
+  podSelector: {}
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          name: kube-system
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+
+---
+# POD COMPLETO EN NAMESPACE DEFAULT
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-compliant-pod
+  namespace: default  # Usa namespace que ya existe
+  labels:
+    app: myapp
+    environment: production
+    owner: team-devops
+    version: v1.0.0
+    network-policy: enabled  # ⭐ Label requerido por política 8
+spec:
+  containers:
+  - name: nginx
+    image: docker.io/library/nginx:latest
+    securityContext:
+      runAsUser: 101
+      runAsNonRoot: true
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+      privileged: false
+      capabilities:
+        drop:
+        - ALL
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "250m"
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    livenessProbe:
+      httpGet:
+        path: /
+        port: 8080
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 5
+    readinessProbe:
+      httpGet:
+        path: /
+        port: 8080
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      timeoutSeconds: 3
+    ports:
+    - containerPort: 8080
+      name: http
+    volumeMounts:
+    - name: cache
+      mountPath: /var/cache/nginx
+    - name: run
+      mountPath: /var/run
+    - name: tmp
+      mountPath: /tmp
+  volumes:
+  - name: cache
+    emptyDir: {}
+  - name: run
+    emptyDir: {}
+  - name: tmp
+    emptyDir: {}

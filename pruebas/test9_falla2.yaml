@@ -1,0 +1,32 @@
+# TEST 9b: Pod solo con livenessProbe (DEBE FALLAR - falta readiness)
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-only-liveness
+  namespace: default
+  labels:
+    app: myapp
+    environment: production
+    owner: team-devops
+    version: v1.0.0
+spec:
+  containers:
+  - name: nginx
+    image: docker.io/library/nginx:latest
+    securityContext:
+      runAsUser: 1000
+      runAsNonRoot: true
+      readOnlyRootFilesystem: true
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "250m"
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    livenessProbe:
+      httpGet:
+        path: /health
+        port: 8080
+      initialDelaySeconds: 30
+      periodSeconds: 10

@@ -1,0 +1,26 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sTrustedRegistries
+metadata:
+  name: trusted-registries-only
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+      - apiGroups: ["apps"]
+        kinds: ["Deployment", "StatefulSet", "DaemonSet"]
+    namespaces:
+      - "default"
+      - "production"
+      # Agrega los namespaces que quieras proteger
+    excludedNamespaces:
+      - "kube-system"
+      - "gatekeeper-system"
+  parameters:
+    registries:
+      - "docker.io/library/"
+      - "gcr.io/"
+      - "registry.k8s.io/"
+      - "quay.io/"
+      # Agrega tus registries privados aquí
+      - "miregistro.empresa.com/"

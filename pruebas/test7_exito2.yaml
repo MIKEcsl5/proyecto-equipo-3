@@ -1,0 +1,27 @@
+# TEST 7c: K8sSecurityContext - Pod con securityContext correcto (DEBE PASAR)
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-good-security-context
+  namespace: default
+  labels:
+    app: myapp
+    environment: production
+    owner: team-devops
+    version: v1.0.0
+spec:
+  containers:
+  - name: nginx
+    image: docker.io/library/nginx:latest
+    securityContext:
+      runAsUser: 1000
+      runAsNonRoot: true
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "250m"
+      limits:
+        memory: "128Mi"
+        cpu: "500m"

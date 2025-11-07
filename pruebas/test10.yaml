@@ -1,0 +1,8 @@
+# TEST 10: K8sRequirePDB - Deployment en prod sin PDB
+# NOTA: Esta política requiere que Gatekeeper tenga data sync habilitado
+# Crear namespace production primero
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: production
+

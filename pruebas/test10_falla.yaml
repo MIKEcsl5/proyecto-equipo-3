@@ -1,0 +1,50 @@
+# TEST 10b: Deployment en namespace prod SIN PDB (DEBE FALLAR)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-deployment-no-pdb
+  namespace: production
+  labels:
+    app: myapp
+    environment: production
+    owner: team-devops
+    version: v1.0.0
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+        environment: production
+        owner: team-devops
+        version: v1.0.0
+    spec:
+      containers:
+      - name: nginx
+        image: docker.io/library/nginx:latest
+        securityContext:
+          runAsUser: 1000
+          runAsNonRoot: true
+          readOnlyRootFilesystem: true
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5

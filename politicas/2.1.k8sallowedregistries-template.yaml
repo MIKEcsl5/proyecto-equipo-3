@@ -1,0 +1,41 @@
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: k8strustedregistries
+  annotations:
+    description: "Requiere que las imágenes de contenedores provengan de registries confiables"
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sTrustedRegistries
+      validation:
+        openAPIV3Schema:
+          type: object
+          properties:
+            registries:
+              type: array
+              description: "Lista de registries permitidos (prefijos de URL)"
+              items:
+                type: string
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package k8strustedregistries
+
+        violation[{"msg": msg}] {
+          container := input.review.object.spec.containers[_]
+          not starts_with_allowed_registry(container.image)
+          msg := sprintf("La imagen '%v' no proviene de un registry confiable. Registries permitidos: %v", [container.image, input.parameters.registries])
+        }
+
+        violation[{"msg": msg}] {
+          container := input.review.object.spec.initContainers[_]
+          not starts_with_allowed_registry(container.image)
+          msg := sprintf("La imagen de initContainer '%v' no proviene de un registry confiable. Registries permitidos: %v", [container.image, input.parameters.registries])
+        }
+
+        starts_with_allowed_registry(image) {
+          registry := input.parameters.registries[_]
+          startswith(image, registry)
+        }

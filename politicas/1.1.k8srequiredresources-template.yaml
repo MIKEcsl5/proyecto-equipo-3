@@ -1,0 +1,47 @@
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: k8srequiredresources
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sRequiredResources
+      validation:
+        openAPIV3Schema:
+          type: object
+          properties:
+            enforceLimits:
+              type: boolean
+              description: "Requerir que todos los contenedores tengan limits definidos"
+            enforceRequests:
+              type: boolean
+              description: "Requerir que todos los contenedores tengan requests definidos"
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package k8srequiredresources
+
+        violation[{"msg": msg}] {
+          input.review.kind.kind == "Pod"
+          container := input.review.object.spec.containers[_]
+
+          missing_limits := input.parameters.enforceLimits
+          missing_requests := input.parameters.enforceRequests
+
+          missing_limits
+          not container.resources.limits
+          msg := sprintf("El contenedor '%s' no define resource limits", [container.name])
+        }
+
+        violation[{"msg": msg}] {
+          input.review.kind.kind == "Pod"
+          container := input.review.object.spec.containers[_]
+
+          missing_requests := input.parameters.enforceRequests
+
+          missing_requests
+          not container.resources.requests
+          msg := sprintf("El contenedor '%s' no define resource requests", [container.name])
+        }
+

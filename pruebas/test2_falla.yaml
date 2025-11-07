@@ -1,0 +1,17 @@
+# TEST 2: K8sTrustedRegistries - Imagen NO confiable (DEBE FALLAR)
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-untrusted-registry
+  namespace: default
+spec:
+  containers:
+  - name: app
+    image: malicious.registry.com/app:latest
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "250m"
+      limits:
+        memory: "128Mi"
+        cpu: "500m"

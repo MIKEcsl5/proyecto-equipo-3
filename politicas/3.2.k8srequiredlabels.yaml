@@ -1,0 +1,26 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sRequiredLabels
+metadata:
+  name: required-labels-policy
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod", "Service"]
+      - apiGroups: ["apps"]
+        kinds: ["Deployment", "StatefulSet", "DaemonSet"]
+    namespaces:
+      - "default"
+      - "production"
+    excludedNamespaces:
+      - "kube-system"
+      - "gatekeeper-system"
+  parameters:
+    labels:
+      - key: "app"
+      - key: "environment"
+        allowedRegex: "^(dev|staging|production)$"
+      - key: "owner"
+      - key: "version"
+        allowedRegex: "^v[0-9]+\\.[0-9]+\\.[0-9]+$"
+

@@ -1,0 +1,10 @@
+# TEST 1: K8sRequiredResources - Pod SIN recursos (DEBE FALLAR)
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-no-resources
+  namespace: default
+spec:
+  containers:
+  - name: nginx
+    image: docker.io/library/nginx:latest

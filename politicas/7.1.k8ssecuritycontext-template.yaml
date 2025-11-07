@@ -1,0 +1,26 @@
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: k8ssecuritycontext
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sSecurityContext
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package k8ssecuritycontext
+
+        violation[{"msg": msg}] {
+          container := input.review.object.spec.containers[_]
+          not container.securityContext
+          msg := sprintf("El contenedor '%s' no tiene securityContext definido", [container.name])
+        }
+
+        violation[{"msg": msg}] {
+          container := input.review.object.spec.containers[_]
+          container.securityContext.runAsUser == 0
+          msg := sprintf("El contenedor '%s' se ejecuta como root", [container.name])
+        }
+

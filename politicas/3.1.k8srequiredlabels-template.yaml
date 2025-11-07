@@ -1,0 +1,46 @@
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: k8srequiredlabels
+  annotations:
+    description: "Requiere que los recursos tengan labels específicos"
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sRequiredLabels
+      validation:
+        openAPIV3Schema:
+          type: object
+          properties:
+            labels:
+              type: array
+              description: "Lista de labels requeridos"
+              items:
+                type: object
+                properties:
+                  key:
+                    type: string
+                  allowedRegex:
+                    type: string
+                    description: "Regex opcional para validar el valor del label"
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package k8srequiredlabels
+
+        violation[{"msg": msg, "details": {"missing_label": required}}] {
+          provided := {label | input.review.object.metadata.labels[label]}
+          required := input.parameters.labels[_].key
+          not provided[required]
+          msg := sprintf("El recurso debe tener el label '%v'", [required])
+        }
+
+        violation[{"msg": msg}] {
+          value := input.review.object.metadata.labels[key]
+          expected := input.parameters.labels[_]
+          expected.key == key
+          expected.allowedRegex
+          not re_match(expected.allowedRegex, value)
+          msg := sprintf("El valor del label '%v' es '%v', pero debe cumplir con el patrón: %v", [key, value, expected.allowedRegex])
+        }

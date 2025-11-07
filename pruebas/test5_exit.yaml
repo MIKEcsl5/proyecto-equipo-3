@@ -1,0 +1,25 @@
+# TEST 5b: K8sReadOnlyRootFS - Pod CON readOnly filesystem (DEBE PASAR)
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-readonly-fs
+  namespace: default
+  labels:
+    app: myapp
+    environment: production
+    owner: team-devops
+    version: v1.0.0
+spec:
+  containers:
+  - name: nginx
+    image: docker.io/library/nginx:latest
+    securityContext:
+      runAsUser: 1000
+      readOnlyRootFilesystem: true
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "250m"
+      limits:
+        memory: "128Mi"
+        cpu: "500m"

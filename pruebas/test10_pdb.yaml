@@ -1,0 +1,11 @@
+# TEST 10c: PodDisruptionBudget de ejemplo
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: myapp-pdb
+  namespace: production
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: myapp

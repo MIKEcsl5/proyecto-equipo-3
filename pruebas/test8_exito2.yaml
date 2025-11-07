@@ -1,0 +1,5 @@
+# TEST 8c: Namespace con NetworkPolicy (DEBE PASAR)
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-with-netpol

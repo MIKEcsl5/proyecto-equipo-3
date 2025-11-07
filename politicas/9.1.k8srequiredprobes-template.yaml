@@ -1,0 +1,47 @@
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: k8snetworkpolicylabel
+  annotations:
+    description: "Requiere que Pods tengan label indicando que cumplen con NetworkPolicy"
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sNetworkPolicyLabel
+      validation:
+        openAPIV3Schema:
+          type: object
+          properties:
+            requiredLabel:
+              type: string
+              description: "Label que debe estar presente"
+            requiredValue:
+              type: string
+              description: "Valor esperado del label"
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package k8snetworkpolicylabel
+
+        violation[{"msg": msg}] {
+          input.review.kind.kind == "Pod"
+          required_label := input.parameters.requiredLabel
+          
+          # Verificar que el label existe
+          not input.review.object.metadata.labels[required_label]
+          
+          msg := sprintf("El Pod '%s' debe tener el label '%s' para confirmar que está protegido por NetworkPolicy", [input.review.object.metadata.name, required_label])
+        }
+
+        violation[{"msg": msg}] {
+          input.review.kind.kind == "Pod"
+          required_label := input.parameters.requiredLabel
+          required_value := input.parameters.requiredValue
+          actual_value := input.review.object.metadata.labels[required_label]
+          
+          # Verificar que el valor es correcto
+          actual_value != required_value
+          
+          msg := sprintf("El Pod '%s' tiene el label '%s' pero su valor es '%s', debe ser '%s'", [input.review.object.metadata.name, required_label, actual_value, required_value])
+        }

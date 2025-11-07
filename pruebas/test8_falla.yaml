@@ -1,0 +1,7 @@
+# TEST 8: K8sRequiredNetworkPolicy - Namespace sin NetworkPolicy
+# NOTA: Esta política requiere que Gatekeeper tenga data sync habilitado
+# Para probar, crear un namespace sin NetworkPolicy (DEBE FALLAR)
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-no-netpol

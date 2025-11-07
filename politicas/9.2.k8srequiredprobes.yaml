@@ -1,0 +1,15 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sNetworkPolicyLabel
+metadata:
+  name: require-netpol-label
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+    namespaces:
+      - "default"
+      - "production"
+  parameters:
+    requiredLabel: "network-policy"
+    requiredValue: "enabled"

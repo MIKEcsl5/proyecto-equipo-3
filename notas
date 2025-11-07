@@ -1,0 +1,4 @@
+sudo kubeadm init \
+    --control-plane-endpoint=192.168.90.20 \
+    --apiserver-advertise-address=192.168.90.20 \
+    --pod-network-cidr=10.42.0.0/16
