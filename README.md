@@ -614,26 +614,7 @@ Este proyecto es parte de un ejercicio académico de seguridad en Kubernetes.
 
 ---
 
-**Autor**: [Tu Nombre/Equipo]  
-**Fecha**: Noviembre 2025  
+**Autor**: [Equipo 3]  
+**Fecha**:06 Noviembre 2025   
 **Versión**: 1.0
 
----
-
-## 📥 Descarga
-
-Para descargar este README.md:
-
-1. Copia todo el contenido del documento
-2. Crea un archivo llamado `README.md` en tu editor de texto
-3. Pega el contenido
-4. Guarda el archivo
-
-O usa este comando en Linux/Mac:
-
-```bash
-# Crear el archivo directamente
-cat > README.md << 'EOF'
-[Pega aquí todo el contenido]
-EOF
-```
