@@ -209,20 +209,7 @@ sudo kubeadm join <MASTER_IP>:6443 --token <TOKEN> --discovery-token-ca-cert-has
 **Guía completa de referencia:**  
 https://www.linuxtechi.com/install-kubernetes-on-rockylinux-almalinux/
 
-### Paso 2: Habilitar ValidatingAdmissionPolicy
-
-```bash
-# Editar manifest del API Server
-sudo vi /etc/kubernetes/manifests/kube-apiserver.yaml
-
-# Agregar en spec.containers[0].command:
-# - --enable-admission-plugins=ValidatingAdmissionPolicy,NodeRestriction
-
-# El kubelet reiniciará automáticamente el API server
-kubectl get pods -n kube-system | grep kube-apiserver
-```
-
-### Paso 3: Instalar Helm
+### Paso 2: Instalar Helm
 
 ```bash
 # Descargar e instalar Helm
@@ -232,7 +219,7 @@ curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 helm version
 ```
 
-### Paso 4: Instalar OPA Gatekeeper
+### Paso 3: Instalar OPA Gatekeeper
 
 ```bash
 # Agregar el repositorio de Gatekeeper
@@ -590,13 +577,6 @@ kubectl port-forward -n gatekeeper-system svc/gatekeeper-controller-manager-metr
 # - gatekeeper_violations: Violaciones detectadas
 ```
 
-## 🎯 Próximos Pasos
-
-1. **Personalizar Políticas**: Ajustar parámetros según necesidades específicas
-2. **Integrar CI/CD**: Validar manifests antes del deploy con `gator test`
-3. **Monitoring**: Configurar alertas en Prometheus para violaciones críticas
-4. **Documentar Excepciones**: Crear proceso formal para excepciones justificadas
-5. **Capacitación**: Entrenar equipos de desarrollo en cumplimiento de políticas
 
 ## 📚 Referencias
 
