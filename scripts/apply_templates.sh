@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Script para aplicar SOLO los ConstraintTemplates (*.1.yaml)
-DIRECTORIO="/root/opa_gatekeeper/politicas"
+DIRECTORIO="./manifests/politicas"
 
 echo "Iniciando aplicación de ConstraintTemplates..."
 

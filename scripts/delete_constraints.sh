@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Script para eliminar SOLO los Constraints (*.2.yaml)
-DIRECTORIO="/root/opa_gatekeeper/politicas"
+DIRECTORIO="./manifests/politicas"
 NAMESPACE_ARG=""
 
 echo "Iniciando eliminación de Constraints..."

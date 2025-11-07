@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Script para aplicar SOLO los Constraints (*.2.yaml)
-DIRECTORIO="/root/opa_gatekeeper/politicas"
+DIRECTORIO="./manifests/politicas"
 NAMESPACE_ARG="" # Puedes añadir manejo de namespace aquí si lo necesitas
 
 echo "Iniciando aplicación de Constraints..."
