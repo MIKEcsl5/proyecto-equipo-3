@@ -3,6 +3,7 @@ kind: K8sRequiredResources
 metadata:
   name: require-pod-resources
 spec:
+  enforcementAction: deny
   match:
     kinds:
       - apiGroups: [""]
