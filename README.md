@@ -21,42 +21,42 @@ Este proyecto implementa 10 políticas críticas de seguridad que cubren desde l
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                     Kubernetes API Server                        │
-│                                                                   │
-│  ┌──────────────┐    ┌──────────────┐    ┌─────────────────┐  │
-│  │ Authentication│───▶│Authorization │───▶│ Admission       │  │
-│  └──────────────┘    └──────────────┘    │ Controllers     │  │
-│                                            └────────┬────────┘  │
-└─────────────────────────────────────────────────────┼───────────┘
+│                     Kubernetes API Server                       │
+│                                                                 │
+│  ┌──────────────┐    ┌──────────────┐    ┌─────────────────┐    │
+│  │Authentication│───▶│Authorization │───▶│ Admission      │    │
+│  └──────────────┘    └──────────────┘    │ Controllers     │    │
+│                                          └────────┬────────┘    │
+└───────────────────────────────────────────────────┼───────────┘
                                                        │
                                                        ▼
                                     ┌──────────────────────────────┐
                                     │ ValidatingAdmissionWebhook   │
                                     │                              │
-                                    │   ┌──────────────────────┐  │
-                                    │   │  OPA Gatekeeper      │  │
-                                    │   │                      │  │
-                                    │   │  ┌───────────────┐  │  │
-                                    │   │  │ OPA Engine    │  │  │
-                                    │   │  │ (Rego Policy) │  │  │
-                                    │   │  └───────────────┘  │  │
-                                    │   │                      │  │
-                                    │   │  ┌───────────────┐  │  │
-                                    │   │  │ Controller    │  │  │
-                                    │   │  │ (Reconciler)  │  │  │
-                                    │   │  └───────────────┘  │  │
-                                    │   └──────────────────────┘  │
+                                    │   ┌──────────────────────┐   │
+                                    │   │  OPA Gatekeeper      │   │
+                                    │   │                      │   │
+                                    │   │  ┌───────────────┐   │   │
+                                    │   │  │ OPA Engine    │   │   │
+                                    │   │  │ (Rego Policy) │   │   │
+                                    │   │  └───────────────┘   │   │
+                                    │   │                      │   │
+                                    │   │  ┌───────────────┐   │   │
+                                    │   │  │ Controller    │   │   │
+                                    │   │  │ (Reconciler)  │   │   │ 
+                                    │   │  └───────────────┘   │   │
+                                    │   └──────────────────────┘   │
                                     └──────────┬───────────────────┘
                                                │
                               ┌────────────────┴────────────────┐
                               │                                  │
                               ▼                                  ▼
                     ┌──────────────────┐            ┌──────────────────┐
-                    │ ConstraintTemplate│            │   Constraint     │
-                    │                   │            │                  │
-                    │ Define políticas  │───────────▶│ Instancias de    │
-                    │ genéricas en Rego │            │ políticas        │
-                    │                   │            │ específicas      │
+                    │ ConstraintTemplate│           │   Constraint     │
+                    │                   │           │                  │
+                    │ Define políticas  │───────────▶│ Instancias de   │
+                    │ genéricas en Rego │           │ políticas        │
+                    │                   │           │ específicas      │
                     └──────────────────┘            └──────────────────┘
 ```
 
